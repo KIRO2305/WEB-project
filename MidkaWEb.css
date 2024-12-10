@@ -1,0 +1,68 @@
+body {
+  background: url('GameFon.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+}
+
+#gameCanvas {
+  background-color: #fff;
+  border: 3px solid #2d3436;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: block;
+  margin: 20px auto;
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #17bfed;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: #dfe6e9;
+  transform: scale(1.1);
+}
+
+button i {
+  margin-right: 8px;
+}
+
+.screen {
+  display: none;
+  text-align: center;
+}
+
+#welcomeScreen, #gameOverScreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+
+#winMessage {
+  font-size: 30px;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

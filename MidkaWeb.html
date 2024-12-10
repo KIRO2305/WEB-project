@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Игра КИРПИЧ</title>
+  <link rel="stylesheet" href="MidkaWEb.css">
+</head>
+<body>
+  <div id="welcomeScreen" class="screen">
+    <h1>Welcome to Breakout Game</h1>
+    <button onclick="startGame()">Start Game</button>
+  </div>
+  
+  <canvas id="gameCanvas" width="480" height="320"></canvas>
+
+  <div id="gameControls" class="screen">
+    <p>Use the arrow keys to move the paddle!</p>
+  </div>
+
+  <div id="gameOverScreen" class="screen">
+    <h1>Game Over</h1>
+    <button onclick="restartGame()">Restart Game</button>
+    <button onclick="goHome()">Go Home</button>
+  </div>
+
+  <div id="winScreen" class="screen">
+    
+  </div>
+
+  <script src="MidkaWEB.js"></script>
+</body>
+</html>

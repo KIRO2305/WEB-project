@@ -1,0 +1,148 @@
+const canvas = document.getElementById(" gameCanvas"); 
+const ctx = canvas.getContext("2d"); 
+Это часть очень важна для игры. Потому что  код получает доступ к HTML элементу canvas, который используется для рисования игры. ctx — это контекст рисования, который используется для отображения объектов на канвасе.
+
+let x = canvas.width / 2;
+let y = canvas.height - 30;
+let dx = 2;
+let dy = -2;
+
+Эти переменные отвечают за начальные координаты мяча и его движение по оси X и Y. dx и dy задают скорость мяча.
+ Управление движением мяча является основой игровой механики, потому что оно определяет, как мяч будет взаимодействовать с окружающей средой.
+
+
+МАССИВ для кирпичей
+let bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    bricks[c][r] = { x: 0, y: 0, status: 1 }; // 1 - кирпич есть
+  }
+}
+Инициализируется двумерный массив bricks, который будет хранить информацию о каждом кирпиче, включая его положение и статус (есть ли кирпич или нет)
+Этот массив необходим для проверки столкновений и управления состоянием кирпичей. Кирпичи могут быть уничтожены при столкновении с мячом, и их состояние изменяется с помощью этого массива.
+
+function drawBall() {
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+}
+ Функция рисует мяч на канвасе, используя метод arc для создания круга.
+Рисование мяча — это основа игры, потому что мяч является одним из самых важных объектов, который будет взаимодействовать с платформой и кирпичами.
+
+function drawPaddle() {
+  ctx.beginPath();
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+} 
+
+Функция рисует платформу (площадку), которая управляется пользователем.
+Платформа служит для отражения мяча и взаимодействует с ним. Это основной элемент управления игрока в игре.
+
+function drawBricks() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      if (bricks[c][r].status == 1) {
+        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+  }
+}
+
+Эта функция рисует кирпичи на канвасе, если их статус равен 1 (то есть они не разрушены).
+Кирпичи — это цель для разрушения в игре. Функция рисует их и обновляет их состояние при столкновении с мячом.
+
+function collisionDetection() {
+  let bricksLeft = 0;
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const b = bricks[c][r];
+      if (b.status == 1) {
+        bricksLeft++;
+        if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+          dy = -dy;
+          b.status = 0; // Удаляем кирпич
+        }
+      }
+    }
+  }
+
+  // Если все кирпичи разрушены, показываем сообщение "You Win"
+  if (bricksLeft === 0) {
+    showWinScreen();
+  }
+}Эта функция проверяет, не столкнулся ли мяч с кирпичами, и если столкновение произошло, меняет направление мяча и обновляет статус кирпича (удаляет его).
+Столкновение мяча с кирпичами — это ключевая игровая механика, которая позволяет игроку взаимодействовать с окружением.
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+Эта часть кода отслеживает нажатия клавиш для управления движением платформы.
+ Это предоставляет игроку возможность контролировать свою платформу.
+
+
+
+
+<div id="welcomeScreen" class="screen">
+  <h1>Welcome to Breakout Game</h1>
+  <button onclick="startGame()">Start Game</button>
+</div>
+ Этот блок отображает экран приветствия с кнопкой "Start Game", которая запускает игру при нажатии.
+ Экран приветствия — это первый экран, который видит пользователь. Кнопка запуска игры инициализирует игру, скрывая этот экран и показывая канвас.
+
+<canvas id="gameCanvas" width="480" height="320"></canvas>
+ Все графические элементы (мяч, кирпичи, платформа) будут отображаться на этом холсте. Канвас — это основа рендеринга игры.
+
+
+<div id="gameOverScreen" class="screen">
+  <h1>Game Over</h1>
+  <button onclick="restartGame()">Restart Game</button>
+  <button onclick="goHome()">Go Home</button>
+</div>
+Этот блок отображается, когда игра заканчивается. Он включает кнопки для перезапуска игры или возвращения на экран приветствия.
+ После завершения игры (поражение игрока) игрок должен иметь возможность выбрать, что делать дальше — начать заново или вернуться на главный экран.
+
+button {
+  padding: 10px 20px;
+  background-color: #17bfed;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: #dfe6e9;
+  transform: scale(1.1);
+}
+ Кнопки получают голубой фон, белый текст, скруглённые углы и лёгкую тень. При наведении (состояние hover) кнопка изменяет цвет и немного увеличивается в размере.
+Это создаёт привлекательные и интуитивно понятные элементы управления, которые визуально откликаются на действия пользователя, улучшая взаимодействие.
+
+.screen {
+  display: none;
+  text-align: center;
+}
+
+#welcomeScreen, #gameOverScreen {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+ Экраны скрыты по умолчанию с помощью display: none. Экраны приветствия и Game Over располагаются по центру экрана с помощью абсолютного позиционирования и трансформации.
+ Скрытие экранов до их активации важно для управления видимостью элементов. Центрирование экранов на экране создаёт фокус на важной информации.
